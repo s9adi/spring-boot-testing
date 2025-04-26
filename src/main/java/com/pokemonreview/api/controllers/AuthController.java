@@ -8,7 +8,6 @@ import com.pokemonreview.api.models.UserEntity;
 import com.pokemonreview.api.repository.RoleRepository;
 import com.pokemonreview.api.repository.UserRepository;
 import com.pokemonreview.api.security.JWTGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,13 +26,13 @@ import java.util.Collections;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager; // Used to authenticate the user
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
     private JWTGenerator jwtGenerator;
 
-    @Autowired
+
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
                           RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator) {
         this.authenticationManager = authenticationManager;
@@ -45,6 +44,10 @@ public class AuthController {
 
     @PostMapping("login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDto loginDto){
+        /*
+         * Authenticate the user using the authentication manager and set the authentication in the security context.
+         * Generate a JWT token using the JWT generator and return it in the response.
+         */
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 loginDto.getUsername(),
@@ -62,8 +65,7 @@ public class AuthController {
 
         UserEntity user = new UserEntity();
         user.setUsername(registerDto.getUsername());
-        user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
-
+        user.setPassword(passwordEncoder.encode((registerDto.getPassword()))); // Bcrypt passwordencoder defined in the security config 
         Role roles = roleRepository.findByName("USER").get();
         user.setRoles(Collections.singletonList(roles));
 
