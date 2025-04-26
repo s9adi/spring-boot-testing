@@ -20,6 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+
+@SuppressWarnings("all")
 public class SecurityConfig {
 
     private JwtAuthEntryPoint authEntryPoint;
@@ -47,7 +49,6 @@ public class SecurityConfig {
      */
 
     @Bean
-    @SuppressWarnings("all")
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
@@ -95,14 +96,49 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .authenticationEntryPoint(authEntryPoint)
                 .and()
+
+                /*
+                 * The session management configuration in Spring Security is used to define
+                 * how the application should handle user sessions.
+                 * In this case, the session management is set to stateless, meaning that the
+                 * server will not store any session information for the user.
+                 * This is particularly useful for RESTful APIs, where each request is treated
+                 * independently and does not rely on a session state.
+                 */
+
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                
+                /*
+                 * The userDetailsService method is used to set a custom UserDetailsService
+                 * implementation that will be used to load user-specific data.
+                 * In this case, the CustomUserDetailsService is injected and set as the
+                 * UserDetailsService for the security context.
+                 * This allows Spring Security to retrieve user details (such as username,
+                 * password, and roles) from the database or any other source
+                 * when authenticating users.
+                 */
+
+
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+
+                /*
+                 * The httpBasic() method enables HTTP Basic authentication for the application.
+                 * This means that users will be prompted to enter their username and password
+                 * when accessing secured resources. The credentials will be sent in the
+                 * Authorization header of the HTTP request.
+                 * 
+                 * Why This Matters:
+                 * Enabling HTTP Basic authentication is a simple way to secure RESTful APIs,
+                 * especially when combined with HTTPS. It allows clients to authenticate using
+                 * standard HTTP headers, making it easy to integrate with various clients and
+                 * libraries.
+                 */
+                .httpBasic(); // ?
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
