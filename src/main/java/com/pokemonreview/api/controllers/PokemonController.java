@@ -3,14 +3,11 @@ package com.pokemonreview.api.controllers;
 
 import com.pokemonreview.api.dto.PokemonDto;
 import com.pokemonreview.api.dto.PokemonResponse;
-import com.pokemonreview.api.models.Pokemon;
 import com.pokemonreview.api.service.PokemonService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/")
@@ -18,7 +15,6 @@ public class PokemonController {
 
     private PokemonService pokemonService;
 
-    @Autowired
     public PokemonController(PokemonService pokemonService) {
         this.pokemonService = pokemonService;
     }
