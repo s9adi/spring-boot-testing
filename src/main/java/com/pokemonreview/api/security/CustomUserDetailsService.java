@@ -26,11 +26,32 @@ public class CustomUserDetailsService  implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    /*
+     * The loadUserByUsername method is used to load the user details from the database
+     * using the username provided by the user during login.
+     * It retrieves the user from the database and maps the roles to authorities.
+     * If the user is not found, it throws a UsernameNotFoundException.
+     */
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
         return new User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
+
+    /*
+     * The mapRolesToAuthorities method is used to convert the roles of the user into
+     * GrantedAuthority objects.
+     * This is necessary for Spring Security to understand the user's roles and
+     * permissions.
+     * It uses Java Streams to map each role to a SimpleGrantedAuthority object.
+     * Finally, it collects the authorities into a collection and returns it.
+     * This collection is then used by Spring Security to determine the user's
+     * permissions and access rights.
+     * 
+     * This method is not in the original UserDetailsService interface, but it is a
+     * custom method created to handle the mapping of roles to authorities.
+     */
 
     private Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
