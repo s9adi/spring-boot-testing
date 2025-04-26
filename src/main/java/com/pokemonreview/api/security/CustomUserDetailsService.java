@@ -51,6 +51,10 @@ public class CustomUserDetailsService  implements UserDetailsService {
      * 
      * This method is not in the original UserDetailsService interface, but it is a
      * custom method created to handle the mapping of roles to authorities.
+     * 
+     * The mapRolesToAuthorities method is creating an Object of SimpleGrantedAuthority that implemnets the GrantedAuthority interface.
+     * and threrefore returning the collection of GrantedAuthority , which is the required type for the UserDetails constructor and this will be
+     * used for the UsernamePasswordAuthenticationToken object in the JWTAuthenticationFilter class.
      */
 
     private Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
