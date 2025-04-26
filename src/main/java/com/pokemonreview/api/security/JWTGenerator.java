@@ -15,8 +15,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JWTGenerator {
+
 	//private static final KeyPair keyPair = Keys.keyPairFor(SignatureAlgorithm.RS256);
 	private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+
+	
 	// HS512 is a symmetric algorithm, so we can use the same key for signing and verifying the token.
 	// here we are using a symmetric key, so we can use the same key for signing and verifying the token.
 	// If we want to use asymmetric key, we can use the following code:
