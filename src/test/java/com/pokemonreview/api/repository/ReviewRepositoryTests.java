@@ -1,6 +1,5 @@
 package com.pokemonreview.api.repository;
 
-import com.pokemonreview.api.models.Pokemon;
 import com.pokemonreview.api.models.Review;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -82,6 +81,30 @@ public class ReviewRepositoryTests {
         Optional<Review> reviewReturn = reviewRepository.findById(review.getId());
 
         Assertions.assertThat(reviewReturn).isEmpty();
+    }
+
+
+
+
+
+    // My tests 
+
+    @Test
+    public void ReviewRepository_SaveAll_ReturnsSavedReview_2(){
+        // Arrange 
+
+        Review review1 = Review.builder().title("title1").content("content1").stars(4).build();
+        Review review2 = Review.builder().title("title2").content("content2").stars(5).build();
+
+        List<Review> reviews = List.of(review1 , review2);
+
+        // Act 
+        List<Review> findAll = reviewRepository.saveAll(reviews);
+
+        // Assert
+
+        Assertions.assertThat(findAll.size()).isEqualTo(2);
+        Assertions.assertThat(findAll.get(0).getId()).isGreaterThan(0);
     }
 
 }

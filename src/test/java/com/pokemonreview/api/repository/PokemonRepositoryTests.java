@@ -2,7 +2,6 @@ package com.pokemonreview.api.repository;
 
 import com.pokemonreview.api.models.Pokemon;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -22,15 +21,15 @@ public class PokemonRepositoryTests {
     @Test
     public void PokemonRepository_SaveAll_ReturnSavedPokemon() {
 
-        //Arrange
+        // Arrange
         Pokemon pokemon = Pokemon.builder()
                 .name("pikachu")
                 .type("electric").build();
 
-        //Act
+        // Act
         Pokemon savedPokemon = pokemonRepository.save(pokemon);
 
-        //Assert
+        // Assert
         Assertions.assertThat(savedPokemon).isNotNull();
         Assertions.assertThat(savedPokemon.getId()).isGreaterThan(0);
     }
@@ -111,5 +110,22 @@ public class PokemonRepositoryTests {
         Assertions.assertThat(pokemonReturn).isEmpty();
     }
 
+    @Test
+    public void PokemonRepository_UpdatePokemon_ReturnPokemonResult() {
+        Pokemon pokemon = Pokemon.builder()
+                .name("pikachu")
+                .type("electric").build();
+
+        pokemonRepository.save(pokemon);
+
+        Pokemon pokemonSave = pokemonRepository.findById(pokemon.getId()).get();
+        pokemonSave.setType("Electric");
+        pokemonSave.setName("Raichu");
+
+        Pokemon updatedPokemon = pokemonRepository.save(pokemonSave);
+
+        Assertions.assertThat(updatedPokemon.getName()).isEqualTo("Raichu");
+        Assertions.assertThat(updatedPokemon.getType()).isEqualTo("Electric");
+    }
 
 }
