@@ -236,4 +236,18 @@ public class PokemonControllerTests {
 
                 response.andExpect(MockMvcResultMatchers.status().isOk());
         }
+
+        @Test
+        public void PokemonController_GetPokemonDetail_ReturnsPokemonDTO() throws Exception {
+                when(pokemonService.getPokemonById(1)).thenReturn(pokemonDto);
+
+                ResultActions response = mockMvc.perform(get("/api/pokemon/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(pokemonDto)));
+
+                response.andExpect(MockMvcResultMatchers.status().isOk())
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.name",
+                                                CoreMatchers.is(pokemonDto.getName())));
+
+        }
 }
